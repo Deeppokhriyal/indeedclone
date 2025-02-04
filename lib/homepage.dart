@@ -4,48 +4,8 @@ import 'package:indeed/profilescreen.dart';
 
 import 'data/job_data.dart';
 
-class MyHomePage extends StatefulWidget {
-  @override
-  // MyHomePage({Key? key, required this.title}) : super(key: key);
-  //
-  // final String title;
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _selectedIndex = 0;
-  int _tapCount = 0;
-  // static List<Widget> _screens = [
-  //   Center(child: Text('Home Screen')),
-  //   Center(child: Text('My Jobs Screen')),
-  //   Center(child: Text('Messages Screen')),
-  //   ProfileScreen(),
-  // ];
-
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-    switch (_selectedIndex) {
-      case 0:
-        break;
-      case 1:
-        break;
-      case 2:
-        break;
-      case 3:
-        if (_selectedIndex == index) {
-          _tapCount++;
-          if (_tapCount == 1) {
-            Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => ProfileScreen()));
-            _tapCount = 0;
-          }
-        }
-        break;
-    }
-  }
+class MyHomePage extends StatelessWidget {
+  // int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -179,6 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
               ),
               Expanded(
                 child: ListView.builder(
+                  physics: NeverScrollableScrollPhysics() ,
                   padding: EdgeInsets.all(8.0),
                   itemCount: jobdata.jobs.length,
                   itemBuilder: (context, index) {
@@ -299,31 +260,31 @@ class _MyHomePageState extends State<MyHomePage> {
             ]
         ),
       ),
-          // : _screens[_selectedIndex],
-      bottomNavigationBar:  BottomNavigationBar(
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.work),
-              label: 'My Jobs',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.message),
-              label: 'Messages',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.blueAccent,
-          unselectedItemColor: Colors.grey,
-          onTap: _onItemTapped,
-        ),
+      //     // : _screens[_selectedIndex],
+      // bottomNavigationBar:  BottomNavigationBar(
+      //     items: const <BottomNavigationBarItem>[
+      //       BottomNavigationBarItem(
+      //         icon: Icon(Icons.home),
+      //         label: 'Home',
+      //       ),
+      //       BottomNavigationBarItem(
+      //         icon: Icon(Icons.work),
+      //         label: 'My Jobs',
+      //       ),
+      //       BottomNavigationBarItem(
+      //         icon: Icon(Icons.message),
+      //         label: 'Messages',
+      //       ),
+      //       BottomNavigationBarItem(
+      //         icon: Icon(Icons.person),
+      //         label: 'Profile',
+      //       ),
+      //     ],
+      //     currentIndex: _selectedIndex,
+      //     selectedItemColor: Colors.blueAccent,
+      //     unselectedItemColor: Colors.grey,
+      //     onTap: _onItemTapped,
+      //   ),
     );
   }
 }

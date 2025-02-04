@@ -1,11 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:indeed/homepage.dart';
+
+import 'main.dart';
 
 class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          leading: IconButton(onPressed: () {
+            // Navigator.push(context, MaterialPageRoute(builder: (context)=>MainScreen()));
+            // Navigator.pop(context);
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>MainScreen()));
+          }, icon: Icon(Icons.arrow_back)),
     title: Text('Profile'),
     centerTitle: true,
     backgroundColor: Colors.white,
