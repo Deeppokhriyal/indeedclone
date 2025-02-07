@@ -8,6 +8,7 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
         appBar: AppBar(
           leading: IconButton(onPressed: () {
             // Navigator.push(context, MaterialPageRoute(builder: (context)=>MainScreen()));
@@ -37,7 +38,7 @@ class ProfileScreen extends StatelessWidget {
                 CircleAvatar(
                   radius: 30,
                   child: Text(
-                    "DP",
+                    "SM",
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -46,13 +47,13 @@ class ProfileScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Deepak Pokhriyal",
+                      "Shivanshi Mishra",
                       style: TextStyle(
                           fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 4),
                     Text(
-                      "dpokhriyal624@gmail.com",
+                      "smishradp2026@gmail.com",
                       style: TextStyle(color: Colors.grey[600]),
                     ),
                     SizedBox(height: 4),

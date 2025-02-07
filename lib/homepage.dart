@@ -28,12 +28,13 @@ class MyHomePage extends StatelessWidget {
       // _selectedIndex == 0
       //     ?
           Container(
-        padding: EdgeInsets.all(10.0),
-        child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+                  padding: EdgeInsets.all(10.0),
+                  child: ListView(
+            // crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 10,),
               Container(
+                height: 40,
                 width: 500,
                 margin: EdgeInsets.only(left: 8, right: 8),
                 decoration: BoxDecoration(
@@ -79,6 +80,7 @@ class MyHomePage extends StatelessWidget {
                 ),
               ),
               Container(
+                height: 40,
                 width: 500,
                 margin: EdgeInsets.only(left: 8, right: 8),
                 decoration: BoxDecoration(
@@ -137,129 +139,129 @@ class MyHomePage extends StatelessWidget {
                   fontSize: 16.0,
                 ),
               ),
-              Expanded(
-                child: ListView.builder(
-                  physics: NeverScrollableScrollPhysics() ,
-                  padding: EdgeInsets.all(8.0),
-                  itemCount: jobdata.jobs.length,
-                  itemBuilder: (context, index) {
-                    final job = jobdata.jobs[index];
-                    return Card(
-                      color: Colors.white,
-                      margin: EdgeInsets.symmetric(vertical: 8),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      elevation: 3,
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (job['label'] != null)
-                              Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 4),
-                                decoration: BoxDecoration(
-                                  color: job['isNew']
-                                      ? Colors.redAccent
-                                      : Colors.purpleAccent[100],
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                                child: Text(
-                                  job['label'],
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 12),
-                                ),
+              ListView.builder(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics() ,
+                padding: EdgeInsets.all(8.0),
+                itemCount: jobdata.jobs.length,
+                itemBuilder: (context, index) {
+                  final job = jobdata.jobs[index];
+                  return Card(
+                    color: Colors.white,
+                    margin: EdgeInsets.symmetric(vertical: 8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    elevation: 3,
+                    child: Padding(
+                      padding: const EdgeInsets.all(12.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (job['label'] != null && job['label']!='')
+                            Container(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 4),
+                              decoration: BoxDecoration(
+                                color: job['isNew']
+                                    ? Colors.redAccent
+                                    : Colors.purpleAccent[100],
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                            SizedBox(height: 8),
-                            Text(
-                              job['title'],
-                              style: TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 4),
-                            Text(
-                              job['company'],
-                              style: TextStyle(
-                                  color: Colors.grey[700], fontSize: 14),
-                            ),
-                            Text(
-                              job['location'],
-                              style: TextStyle(
-                                  color: Colors.grey[600], fontSize: 12),
-                            ),
-                            SizedBox(height: 8),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  job['salary'],
-                                  style: TextStyle(
-                                    color: Colors.green,
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 14,
-                                  ),
-                                ),
-                                // Spacer(),
-                                if (job['status'] != null)
-                                  Text(
-                                    job['status'],
-                                    style: TextStyle(
-                                      color: Colors.blue,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                              ],
-                            ),
-                            if (job['type'] != null)
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 4),
-                                child: Text(
-                                  job['type'],
-                                  style: TextStyle(
-                                      color: Colors.black54, fontSize: 12),
-                                ),
-                              ),
-                            if (job['active'] != null && job['active'] != '')
-                              Text(
-                                job['active'],
+                              child: Text(
+                                job['label'],
                                 style: TextStyle(
-                                    color: Colors.grey[500], fontSize: 12),
+                                    color: Colors.white, fontSize: 12),
                               ),
-                            SizedBox(height: 8),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment
-                                  .spaceBetween,
-                              children: [
-                                TextButton.icon(
-                                  onPressed: () {},
-                                  icon: Icon(Icons.send, size: 16,
-                                      color: Colors.blue),
-                                  label: Text(
-                                    'Easily apply',
-                                    style: TextStyle(color: Colors.blue),
+                            ),
+                          SizedBox(height: 8),
+                          Text(
+                            job['title'],
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          SizedBox(height: 4),
+                          Text(
+                            job['company'],
+                            style: TextStyle(
+                                color: Colors.grey[700], fontSize: 14),
+                          ),
+                          Text(
+                            job['location'],
+                            style: TextStyle(
+                                color: Colors.grey[600], fontSize: 12),
+                          ),
+                          SizedBox(height: 8),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                job['salary'],
+                                style: TextStyle(
+                                  color: Colors.green,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              // Spacer(),
+                              if (job['status'] != null && job['status'] !='')
+                                Text(
+                                  job['status'],
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                    fontSize: 12,
                                   ),
                                 ),
-                                IconButton(
-                                  icon: Icon(Icons.bookmark_border),
-                                  onPressed: () {},
-                                ),
-                              ],
+                            ],
+                          ),
+                          if (job['type'] != null)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 4),
+                              child: Text(
+                                job['type'],
+                                style: TextStyle(
+                                    color: Colors.black54, fontSize: 12),
+                              ),
                             ),
-                          ],
-                        ),
+                          if (job['active'] != null && job['active'] != '')
+                            Text(
+                              job['active'],
+                              style: TextStyle(
+                                  color: Colors.grey[500], fontSize: 12),
+                            ),
+                          SizedBox(height: 8),
+                          if(job['salary']!=null && job['salary']!='')
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment
+                                .spaceBetween,
+                            children: [
+                              TextButton.icon(
+                                onPressed: () {},
+                                icon: Icon(Icons.send, size: 16,
+                                    color: Colors.blue),
+                                label: Text(
+                                  'Easily apply',
+                                  style: TextStyle(color: Colors.blue),
+                                ),
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.bookmark_border),
+                                onPressed: () {},
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                    );
-                  },
-                ),
+                    ),
+                  );
+                },
               ),
             ]
-        ),
-      ),
+                  ),
+                ),
       //     // : _screens[_selectedIndex],
       // bottomNavigationBar:  BottomNavigationBar(
       //     items: const <BottomNavigationBarItem>[
