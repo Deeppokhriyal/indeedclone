@@ -1,6 +1,5 @@
 
 import 'package:flutter/material.dart';
-import 'package:indeed/profilescreen.dart';
 
 import 'data/job_data.dart';
 

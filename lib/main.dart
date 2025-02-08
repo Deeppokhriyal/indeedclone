@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:indeed/homepage.dart';
+import 'package:indeed/jobs.dart';
 import 'package:indeed/profilescreen.dart';
+import 'package:indeed/startingpage.dart';
 
 void main() {
   runApp(MyApp());
@@ -11,7 +13,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MainScreen(),
+      home: MyStaringPage(),
     );
   }
 }
@@ -26,7 +28,7 @@ class _MainScreenState extends State<MainScreen> {
 
   final List<Widget> _pages = [
     MyHomePage(),
-    Center(child: Text('My Jobs Screen')),
+    Jobs(),
     Center(child: Text('Messages Screen')),
     ProfileScreen(),
   ];
@@ -55,18 +57,6 @@ class _MainScreenState extends State<MainScreen> {
      ,
 
       child: Scaffold(
-        // appBar: AppBar(
-        //   title: Text(
-        //     _selectedIndex == 0
-        //         ? 'Home'
-        //         : _selectedIndex == 1
-        //         ? 'My Jobs'
-        //         : _selectedIndex == 2
-        //         ? 'Messages'
-        //         : 'Profile',
-        //   ),
-        //   backgroundColor: Colors.blueAccent,
-        // ),
         body: IndexedStack(
           index: _selectedIndex,
           children: _pages,
