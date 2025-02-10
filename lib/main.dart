@@ -62,6 +62,18 @@ class _MainScreenState extends State<MainScreen> {
      ,
 
       child: Scaffold(
+        // appBar: AppBar(
+        //   title: Text(
+        //     _selectedIndex == 0
+        //         ? 'Home'
+        //         : _selectedIndex == 1
+        //         ? 'My Jobs'
+        //         : _selectedIndex == 2
+        //         ? 'Messages'
+        //         : 'Profile',
+        //   ),
+        //   backgroundColor: Colors.blueAccent,
+        // ),
         body: IndexedStack(
           index: _selectedIndex,
           children: _pages,

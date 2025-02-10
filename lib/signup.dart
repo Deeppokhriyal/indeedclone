@@ -144,7 +144,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
                         children: [
                           SizedBox(
                             height: 46,
-                            width: 350,
+                            width: 300,
                             child: ElevatedButton(
                               style: ElevatedButton.styleFrom(
                                 foregroundColor: Colors.black, backgroundColor: Colors.white70, // Set the text color here
@@ -168,7 +168,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
                       ),
                     ],
                   ),
-                  SizedBox(height: 80,),
+                  SizedBox(height: 50,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [

@@ -1,4 +1,4 @@
-
+import 'package:indeed/main.dart';
 import 'package:flutter/material.dart';
 import 'package:indeed/login.dart';
 
@@ -41,8 +41,8 @@ class _MyStaringPageState extends State<MyStaringPage> {
             Column(
               children: [
                 Container(
-                  padding: EdgeInsets.only(right: 15,left: 15,top: 60),
-                  margin: EdgeInsets.fromLTRB(20, 25, 20, 20),
+                  padding: EdgeInsets.only(right: 15,left: 15,top: 40),
+                  margin: EdgeInsets.fromLTRB(20, 20, 20, 20),
                   child: Image.asset('assets/images/officestart.png', height: 280,width: 400,alignment: Alignment.center,),
                 ),
                 Divider(color: Colors.black,),

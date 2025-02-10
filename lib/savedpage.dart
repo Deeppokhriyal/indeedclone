@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:indeed/homepage.dart';
 import 'package:indeed/saveditemprovider.dart';
-// import 'package:provider/provider.dart';
+import 'package:provider/provider.dart';
+import 'package:indeed/data/job_data.dart';
 
 class SavedPage extends StatelessWidget {
   @override
@@ -25,7 +26,7 @@ class SavedPage extends StatelessWidget {
                 SizedBox(height: 15),
                 ElevatedButton(
                   onPressed: () {
-                    Get.to(MyHomePage());
+                    Navigator.push(context, MaterialPageRoute(builder:(context) => MyHomePage()));
                   },
                   style: ElevatedButton.styleFrom(
                     padding: EdgeInsets.symmetric(horizontal: 30, vertical: 15),
@@ -61,81 +62,62 @@ class SavedPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (job['label'] != null && job['label'] != '')
+                      if (job.label.isNotEmpty)
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: job['isNew'] ? Colors.redAccent : Colors.purpleAccent[100],
+                            color: job.isNew ? Colors.redAccent : Colors.purpleAccent[100],
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            job['label'],
+                            job.label,
                             style: TextStyle(color: Colors.white, fontSize: 12),
                           ),
                         ),
                       SizedBox(height: 8),
                       Text(
-                        job['title'],
+                        job.title,
                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 4),
                       Text(
-                        job['company'],
+                        job.company,
                         style: TextStyle(color: Colors.grey[700], fontSize: 14),
                       ),
                       Text(
-                        job['location'],
+                        job.location,
                         style: TextStyle(color: Colors.grey[600], fontSize: 12),
                       ),
                       SizedBox(height: 8),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            job['salary'],
-                            style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 14),
-                          ),
-                          if (job['status'] != null && job['status'] != '')
-                            Text(
-                              job['status'],
-                              style: TextStyle(color: Colors.blue, fontSize: 12),
-                            ),
-                        ],
+                      Text(
+                        job.salary,
+                        style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 14),
                       ),
-                      if (job['type'] != null)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Text(
-                            job['type'],
-                            style: TextStyle(color: Colors.black54, fontSize: 12),
-                          ),
-                        ),
-                      if (job['active'] != null && job['active'] != '')
+                      if (job.status.isNotEmpty)
                         Text(
-                          job['active'],
-                          style: TextStyle(color: Colors.grey[500], fontSize: 12),
+                          job.status,
+                          style: TextStyle(color: Colors.blue, fontSize: 12),
                         ),
                       SizedBox(height: 8),
-                      if (job['salary'] != null && job['salary'] != '')
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            TextButton.icon(
-                              onPressed: () {},
-                              icon: Icon(Icons.send, size: 16, color: Colors.blue),
-                              label: Text(
-                                'Easily apply',
-                                style: TextStyle(color: Colors.blue),
-                              ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          TextButton.icon(
+                            onPressed: () {},
+                            icon: Icon(Icons.send, size: 16, color: Colors.blue),
+                            label: Text(
+                              'Easily apply',
+                              style: TextStyle(color: Colors.blue),
                             ),
-                            IconButton(
-                              icon: Icon(Icons.bookmark_border),
-                              onPressed: () {
-                                // Provider.of<SavedItemsProvider>(context, listen: false).removejob(job);
-                              },
-                            ),
-                          ],
-                        ),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.bookmark_border),
+                            onPressed: () {
+                              Provider.of<SavedItemsProvider>(context, listen: false).removejob(job);
+                            },
+                          ),
+                        ],
+                      ),
                     ],
                   ),
                 ),

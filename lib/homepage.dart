@@ -145,9 +145,9 @@ class MyHomePage extends StatelessWidget {
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics() ,
                 padding: EdgeInsets.all(8.0),
-                itemCount: jobdata.jobs.length,
+                itemCount: JobDataList.jobs.length,
                 itemBuilder: (context, index) {
-                  final job = jobdata.jobs[index];
+                  final job = JobDataList.jobs[index];
                   return Card(
                     color: Colors.white,
                     margin: EdgeInsets.symmetric(vertical: 8),
@@ -252,8 +252,8 @@ class MyHomePage extends StatelessWidget {
                                 IconButton(
                                   icon: Icon(Icons.bookmark_border),
                                   onPressed: () {
-                                    Provider.of<SavedItemsProvider>(context, listen: false)
-                                      .savejob(job[index]);
+                                    final jobObject = JobData.fromMap(job); // Convert Map to JobData
+                                    Provider.of<SavedItemsProvider>(context, listen: false).savejob(jobObject);
                                     },
                                 ),
                               ],

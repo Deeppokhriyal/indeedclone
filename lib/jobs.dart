@@ -11,6 +11,7 @@ class Jobs extends StatelessWidget {
       length: 4, // Number of tabs
       child: Scaffold(
         appBar: AppBar(
+          backgroundColor: Colors.white,
           title: Text('My Jobs',style: TextStyle(fontFamily: 'sans-serif-thin',fontSize: 25),),
           bottom: TabBar(
             labelColor: Colors.blueAccent,

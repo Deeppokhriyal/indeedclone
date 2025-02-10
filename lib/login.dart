@@ -43,7 +43,7 @@ class _MyLoginState extends State<MyLogin> {
                           child: Icon(Icons.arrow_back_ios,size: 30,)
                       ),
 
-                      SizedBox(height: 15,),
+                      SizedBox(height: 10,),
                       Container(
                         padding: EdgeInsets.only(right: 30,left: 30),
                         child: Column(crossAxisAlignment: CrossAxisAlignment.start,
@@ -55,7 +55,7 @@ class _MyLoginState extends State<MyLogin> {
                         ),
 
                       ),
-                      SizedBox(height: 70,),
+                      SizedBox(height: 50,),
                       SingleChildScrollView(
                         child: Container(
                           padding: EdgeInsets.only(right: 30,left: 30),
@@ -75,7 +75,7 @@ class _MyLoginState extends State<MyLogin> {
                                   ),
                                 ),
                               ),
-                              SizedBox(height: 30,),
+                              SizedBox(height: 20,),
                               TextField(style: TextStyle( fontFamily: 'sans-serif-light'),
                                 controller: passwordController,
                                 cursorColor: Colors.black,
@@ -104,11 +104,11 @@ class _MyLoginState extends State<MyLogin> {
                                     activeColor: Colors.green, // Change the color when checked
                                   ),
                                   Text('As Employer',style: TextStyle(fontFamily: 'sans-serif-thin',fontSize: 13),),
-                                  SizedBox(width: 100,),
+                                  SizedBox(width: 80,),
                                   Text('Forget Password?',style: TextStyle(color: Colors.black,fontSize: 12,fontFamily: 'sans-serif-light'),textAlign: TextAlign.right,),
                                 ],
                               ),
-                              SizedBox(height: 35,),
+                              SizedBox(height: 30,),
                               SizedBox(
                                 height: 50,
                                 width: 450,
@@ -123,13 +123,13 @@ class _MyLoginState extends State<MyLogin> {
                                 ),
                               ),
 
-                              SizedBox(height: 39,),
+                              SizedBox(height: 30,),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   SizedBox(
                                     height: 46,
-                                    width: 350,
+                                    width: 300,
                                     child:
                                     // ElevatedButton(
                                     //   onPressed: () async {
