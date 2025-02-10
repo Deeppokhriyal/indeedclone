@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:indeed/homepage.dart';
 import 'package:indeed/jobs.dart';
 import 'package:indeed/profilescreen.dart';
+import 'package:indeed/saveditemprovider.dart';
 import 'package:indeed/startingpage.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (context) => SavedItemsProvider(),
+    child: MyApp(),
+  ),);
 }
 
 class MyApp extends StatelessWidget {

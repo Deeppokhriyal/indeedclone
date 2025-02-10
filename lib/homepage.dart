@@ -1,9 +1,12 @@
 
 import 'package:flutter/material.dart';
+import 'package:indeed/saveditemprovider.dart';
+import 'package:provider/provider.dart';
 
 import 'data/job_data.dart';
 
 class MyHomePage extends StatelessWidget {
+
   // int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
@@ -26,10 +29,10 @@ class MyHomePage extends StatelessWidget {
       body:
       // _selectedIndex == 0
       //     ?
-          Container(
-                  padding: EdgeInsets.all(10.0),
-                  child: ListView(
-            // crossAxisAlignment: CrossAxisAlignment.start,
+      Container(
+        padding: EdgeInsets.all(10.0),
+        child: ListView(
+          // crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               SizedBox(height: 10,),
               Container(
@@ -233,25 +236,28 @@ class MyHomePage extends StatelessWidget {
                             ),
                           SizedBox(height: 8),
                           if(job['salary']!=null && job['salary']!='')
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment
-                                .spaceBetween,
-                            children: [
-                              TextButton.icon(
-                                onPressed: () {},
-                                icon: Icon(Icons.send, size: 16,
-                                    color: Colors.blue),
-                                label: Text(
-                                  'Easily apply',
-                                  style: TextStyle(color: Colors.blue),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment
+                                  .spaceBetween,
+                              children: [
+                                TextButton.icon(
+                                  onPressed: () {},
+                                  icon: Icon(Icons.send, size: 16,
+                                      color: Colors.blue),
+                                  label: Text(
+                                    'Easily apply',
+                                    style: TextStyle(color: Colors.blue),
+                                  ),
                                 ),
-                              ),
-                              IconButton(
-                                icon: Icon(Icons.bookmark_border),
-                                onPressed: () {},
-                              ),
-                            ],
-                          ),
+                                IconButton(
+                                  icon: Icon(Icons.bookmark_border),
+                                  onPressed: () {
+                                    Provider.of<SavedItemsProvider>(context, listen: false)
+                                      .savejob(job[index]);
+                                    },
+                                ),
+                              ],
+                            ),
                         ],
                       ),
                     ),
@@ -259,33 +265,8 @@ class MyHomePage extends StatelessWidget {
                 },
               ),
             ]
-                  ),
-                ),
-      //     // : _screens[_selectedIndex],
-      // bottomNavigationBar:  BottomNavigationBar(
-      //     items: const <BottomNavigationBarItem>[
-      //       BottomNavigationBarItem(
-      //         icon: Icon(Icons.home),
-      //         label: 'Home',
-      //       ),
-      //       BottomNavigationBarItem(
-      //         icon: Icon(Icons.work),
-      //         label: 'My Jobs',
-      //       ),
-      //       BottomNavigationBarItem(
-      //         icon: Icon(Icons.message),
-      //         label: 'Messages',
-      //       ),
-      //       BottomNavigationBarItem(
-      //         icon: Icon(Icons.person),
-      //         label: 'Profile',
-      //       ),
-      //     ],
-      //     currentIndex: _selectedIndex,
-      //     selectedItemColor: Colors.blueAccent,
-      //     unselectedItemColor: Colors.grey,
-      //     onTap: _onItemTapped,
-      //   ),
+        ),
+      ),
     );
   }
 }
