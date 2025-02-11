@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:indeed/employer_homepage.dart';
-import 'package:indeed/homepage.dart';
+import 'package:indeed/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthController extends GetxController {
@@ -22,7 +22,7 @@ class AuthController extends GetxController {
       if (isEmployer) {
         Get.offAll(() => HomeScreen()); // Navigate to employer UI
       } else {
-        Get.offAll(() => MyHomePage()); // Navigate to employee UI
+        Get.offAll(() => MainScreen()); // Navigate to employee UI
       }
     } else {
       Get.snackbar("Error", "Invalid credentials", snackPosition: SnackPosition.BOTTOM);

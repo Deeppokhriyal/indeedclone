@@ -1,0 +1,138 @@
+import 'package:flutter/material.dart';
+
+class UploadJob extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: UploadJobScreen(),
+    );
+  }
+}
+
+class UploadJobScreen extends StatefulWidget {
+  @override
+  _UploadJobScreenState createState() => _UploadJobScreenState();
+}
+
+class _UploadJobScreenState extends State<UploadJobScreen> {
+  TextEditingController categoryController = TextEditingController();
+  TextEditingController jobPositionController = TextEditingController();
+  TextEditingController locationController = TextEditingController();
+  TextEditingController jobTitleController = TextEditingController();
+  TextEditingController companyNameController = TextEditingController();
+  TextEditingController establishedController = TextEditingController();
+  TextEditingController jobDescriptionController = TextEditingController();
+
+  final List<String> categories = ['Design', 'Finance', 'Education', 'Restaurant', 'Health', 'Programmer'];
+  final List<String> jobPositions = ['Junior Level', 'Mid Level', 'Senior Level'];
+  final List<String> locations = ['California', 'New York', 'Texas', 'Florida'];
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 0,
+        leading: IconButton(onPressed:(){}, icon:Icon(Icons.arrow_back)),
+        centerTitle: true,
+        title: Text(
+          'Upload Job',
+          style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            buildEditableDropdownField('Category', categories, categoryController),
+            buildTextField('Job Title/Designation', jobTitleController),
+            buildEditableDropdownField('Job Position', jobPositions, jobPositionController),
+            buildEditableDropdownField('Location', locations, locationController),
+            buildTextField('Company Name', companyNameController),
+            buildTextField('Established In', establishedController),
+            buildTextField('Job Description', jobDescriptionController, maxLines: 4),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+              ),
+              child: Container(
+                width: double.infinity,
+                padding: EdgeInsets.all(15),
+                alignment: Alignment.center,
+                child: Text(
+                  'Upload',
+                  style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildEditableDropdownField(String label, List<String> items, TextEditingController controller) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
+          SizedBox(height: 5),
+          TextField(
+            controller: controller,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.grey[200],
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(20), borderSide: BorderSide.none),
+              suffixIcon: PopupMenuButton<String>(
+                icon: Icon(Icons.arrow_drop_down),
+                onSelected: (String value) {
+                  controller.text = value;
+                },
+                itemBuilder: (BuildContext context) {
+                  return items.map<PopupMenuItem<String>>((String value) {
+                    return PopupMenuItem(
+                      value: value,
+                      child: Text(value),
+                    );
+                  }).toList();
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildTextField(String label, TextEditingController controller, {int maxLines = 1}) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
+          SizedBox(height: 5),
+          TextField(
+            controller: controller,
+            maxLines: maxLines,
+            decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.grey[200],
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(10), borderSide: BorderSide.none),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
