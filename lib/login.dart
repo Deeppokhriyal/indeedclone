@@ -7,6 +7,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:get/get.dart';
 
+import 'controllers/auth_comtroller.dart';
+import 'employer_homepage.dart';
+
 class MyLogin extends StatefulWidget {
 
   @override
@@ -14,55 +17,41 @@ class MyLogin extends StatefulWidget {
 }
 
 class _MyLoginState extends State<MyLogin> {
-  final TextEditingController usernameController = TextEditingController();
+  final AuthController authController = Get.put(tag:"Login",AuthController());
 
-  final TextEditingController passwordController = TextEditingController();
-
-  bool _isChecked = false;
+  // bool _isChecked = false;
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: Scaffold(
+    return Scaffold(
             backgroundColor: Colors.white,
-            body: Stack(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/back4.jpg'), // Path to your background image
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  ListView( shrinkWrap: true,
-                    children: [
-                      Container(
-                          margin: EdgeInsets.fromLTRB(0, 30, 300, 20),
-                          child: Icon(Icons.arrow_back_ios,size: 30,)
-                      ),
-
-                      SizedBox(height: 10,),
-                      Container(
-                        padding: EdgeInsets.only(right: 30,left: 30),
-                        child: Column(crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text('Welcome Back.', style: TextStyle( color: Colors.black, fontSize: 50, fontFamily: 'nexalight'),),
-                            Text('Unlock endless job opportunities Login to get Started', style: TextStyle( color: Colors.black, fontSize: 15, fontFamily: 'sans-serif-thin'),),
-
-                          ],
+            body: SizedBox.expand(
+                    child: ListView( shrinkWrap: true,
+                      children: [
+                        Container(
+                            margin: EdgeInsets.fromLTRB(0, 30, 300, 20),
+                            child: Icon(Icons.arrow_back_ios,size: 30,)
                         ),
-
-                      ),
-                      SizedBox(height: 50,),
-                      SingleChildScrollView(
-                        child: Container(
+                    
+                        SizedBox(height: 10,),
+                        Container(
+                          padding: EdgeInsets.only(right: 30,left: 30),
+                          child: Column(crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text('Welcome Back.', style: TextStyle( color: Colors.black, fontSize: 50, fontFamily: 'nexalight'),),
+                              Text('Unlock endless job opportunities Login to get Started', style: TextStyle( color: Colors.black, fontSize: 15, fontFamily: 'sans-serif-thin'),),
+                    
+                            ],
+                          ),
+                    
+                        ),
+                        SizedBox(height: 50,),
+                        Container(
                           padding: EdgeInsets.only(right: 30,left: 30),
                           child: Column(
                             children: [
                               TextField( cursorColor: Colors.black,style: TextStyle( fontFamily: 'sans-serif-light'),
-                                controller: usernameController,
+                                controller: authController.usernameController,
                                 decoration: InputDecoration(
                                   fillColor: Colors.pink,
                                   hintText: 'Enter your Email',
@@ -77,7 +66,7 @@ class _MyLoginState extends State<MyLogin> {
                               ),
                               SizedBox(height: 20,),
                               TextField(style: TextStyle( fontFamily: 'sans-serif-light'),
-                                controller: passwordController,
+                                controller: authController.passwordController,
                                 cursorColor: Colors.black,
                                 obscureText: true,
                                 decoration: InputDecoration(
@@ -92,33 +81,32 @@ class _MyLoginState extends State<MyLogin> {
                                   ),
                                 ),
                               ),
-                              Row(
-                                children: [
-                                  Checkbox(
-                                    value: _isChecked,
-                                    onChanged: (bool? value) {
-                                      setState(() {
-                                        _isChecked = value ?? false;
-                                      });
-                                    },
-                                    activeColor: Colors.green, // Change the color when checked
-                                  ),
-                                  Text('As Employer',style: TextStyle(fontFamily: 'sans-serif-thin',fontSize: 13),),
-                                  SizedBox(width: 80,),
-                                  Text('Forget Password?',style: TextStyle(color: Colors.black,fontSize: 12,fontFamily: 'sans-serif-light'),textAlign: TextAlign.right,),
-                                ],
-                              ),
+                              SizedBox(width: 80,),
+                              Text('                                            Forget Password?',style: TextStyle(color: Colors.black,fontSize: 12,fontFamily: 'sans-serif-light'),textAlign: TextAlign.right,),
+
+
+                                      Obx(() => CheckboxListTile(
+                                      value: authController.isChecked.value,
+                                      onChanged: (value) {
+                                        authController.isChecked.value = value!;
+                                      },
+                                        activeColor: Colors.green,
+                                      title: Text('As Employer',style: TextStyle(fontFamily: 'sans-serif-thin',fontSize: 13),),
+                                    )),
+
+
+
                               SizedBox(height: 30,),
                               SizedBox(
                                 height: 50,
-                                width: 450,
+                                width: double.infinity,
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                     foregroundColor: Colors.blueAccent, backgroundColor: Colors.blueAccent, // Set the text color here
-                                  ),  onPressed: () {
-                                    login(context);
+                                  ),
+                                  onPressed: () => authController.login(context),
                                   // Get.to(()=>MyHomePage());
-                                },
+
                                   child: Text('Login',style: TextStyle(color: Colors.white, fontSize: 18,fontFamily: 'sans-serif-medium'),),
                                 ),
                               ),
@@ -174,28 +162,33 @@ class _MyLoginState extends State<MyLogin> {
                             ],
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   )
-                ]
-            )
-        )
-    );
-  }
+        );
+  }}
 
-  void login(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? storedUsername = prefs.getString("username");
-    String? storedPassword = prefs.getString("password");
-    print(storedPassword);
-    print(storedUsername);
-    if (usernameController.text == storedUsername && passwordController.text == storedPassword) {
-      // Navigate to home screen
-      Navigator.push(context, MaterialPageRoute(builder: (context)=>MainScreen()));
-
-    }
-  }
-}
+//   void login(BuildContext context) async {
+//     SharedPreferences prefs = await SharedPreferences.getInstance();
+//     String? storedUsername = prefs.getString("username");
+//     String? storedPassword = prefs.getString("password");
+//     bool? isEmployee = prefs.getBool("isEmployee");
+//
+//     print(storedPassword);
+//     print(storedUsername);
+//     if (authController.usernameController.text == storedUsername && authController.passwordController.text == storedPassword) {
+//       // Navigate to home screen
+//       if(isEmployee??false){
+//         Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
+//       }
+//       else{
+//         Navigator.push(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
+//       }
+//
+//
+//     }
+//   }
+// }
 
 
 // Future<User?> signInWithGoogle() async {
@@ -214,4 +207,4 @@ class _MyLoginState extends State<MyLogin> {
 // Future<void> signOut() async {
 //   await FirebaseAuth.instance.signOut();
 //   await GoogleSignIn().signOut();
-// }
+// }}
