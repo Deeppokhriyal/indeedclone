@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:indeed/homepage.dart';
 import 'package:indeed/saveditemprovider.dart';
 import 'package:provider/provider.dart';
@@ -66,7 +65,7 @@ class SavedPage extends StatelessWidget {
                         Container(
                           padding: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                           decoration: BoxDecoration(
-                            color: job.isNew ? Colors.redAccent : Colors.purpleAccent[100],
+                            color: (job.is_new.toString()!=true) ? Colors.redAccent : Colors.purpleAccent[100],
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
@@ -76,12 +75,12 @@ class SavedPage extends StatelessWidget {
                         ),
                       SizedBox(height: 8),
                       Text(
-                        job.title,
+                        job.job_title,
                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       SizedBox(height: 4),
                       Text(
-                        job.company,
+                        job.company_name,
                         style: TextStyle(color: Colors.grey[700], fontSize: 14),
                       ),
                       Text(
@@ -90,12 +89,12 @@ class SavedPage extends StatelessWidget {
                       ),
                       SizedBox(height: 8),
                       Text(
-                        job.salary,
+                        job.salary.toString(),
                         style: TextStyle(color: Colors.green, fontWeight: FontWeight.bold, fontSize: 14),
                       ),
-                      if (job.status.isNotEmpty)
+                      if (job.job_position.isNotEmpty)
                         Text(
-                          job.status,
+                          job.job_position,
                           style: TextStyle(color: Colors.blue, fontSize: 12),
                         ),
                       SizedBox(height: 8),
@@ -113,7 +112,8 @@ class SavedPage extends StatelessWidget {
                           IconButton(
                             icon: Icon(Icons.bookmark_border),
                             onPressed: () {
-                              Provider.of<SavedItemsProvider>(context, listen: false).removejob(job);
+                              Provider.of<SavedItemsProvider>(context, listen: false)
+                                  .removejob(job);
                             },
                           ),
                         ],

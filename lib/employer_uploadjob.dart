@@ -1,4 +1,7 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:indeed/job_list_screen.dart';
 
 class UploadJob extends StatelessWidget {
   @override
@@ -21,12 +24,57 @@ class _UploadJobScreenState extends State<UploadJobScreen> {
   TextEditingController locationController = TextEditingController();
   TextEditingController jobTitleController = TextEditingController();
   TextEditingController companyNameController = TextEditingController();
-  TextEditingController establishedController = TextEditingController();
+  TextEditingController requirementController = TextEditingController();
   TextEditingController jobDescriptionController = TextEditingController();
+  TextEditingController salaryController = TextEditingController();
+  TextEditingController jobTypeController = TextEditingController();
+  TextEditingController shiftScheduleController = TextEditingController();
+  TextEditingController labelController = TextEditingController();
+  TextEditingController activeController = TextEditingController();
+  TextEditingController isnewController = TextEditingController();
+
+  Future<void> uploadJob() async {
+    Map<String, String> jobData = {
+      'category': categoryController.text,
+      'job_title': jobTitleController.text,
+      'job_position': jobPositionController.text,
+      'location': locationController.text,
+      'company_name': companyNameController.text,
+      'requirements': requirementController.text,
+      'job_description': jobDescriptionController.text,
+      'salary': salaryController.text,
+      'job_type': jobTypeController.text,
+      'shift_schedule': shiftScheduleController.text,
+      'label': labelController.text,
+      'active': activeController.text,
+      'is_new': isnewController.text,
+    };
+
+
+    print(jobData);
+
+      final response = await http.post(
+      Uri.parse('http://192.168.1.91:8000/api/upload-job'),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(jobData),
+    );
+
+    if (response.statusCode == 201) {
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>JobListScreen()));
+      print('Job uploaded successfully: ${response.body}');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Job uploaded successfully!')));
+    } else {
+      print('Failed to upload job: ${response.body}');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Failed to upload job!')));
+    }
+  }
+
 
   final List<String> categories = ['Design', 'Finance', 'Education', 'Restaurant', 'Health', 'Programmer'];
-  final List<String> jobPositions = ['Junior Level', 'Mid Level', 'Senior Level'];
+  final List<String> jobPositions = ['Intern', 'Mid Level', 'Senior Level'];
   final List<String> locations = ['California', 'New York', 'Texas', 'Florida'];
+  final List<String> isnew = ['True','False'];
+  final List<String> label =['Hiring multiple candidates','New'];
 
   @override
   Widget build(BuildContext context) {
@@ -50,13 +98,20 @@ class _UploadJobScreenState extends State<UploadJobScreen> {
             buildEditableDropdownField('Category', categories, categoryController),
             buildTextField('Job Title/Designation', jobTitleController),
             buildEditableDropdownField('Job Position', jobPositions, jobPositionController),
+            buildTextField('Salary', salaryController),
+            buildTextField('Job Type', jobTypeController),
+            buildTextField('Shift Schedule', shiftScheduleController),
             buildEditableDropdownField('Location', locations, locationController),
+            buildEditableDropdownField('Label', label, labelController),
             buildTextField('Company Name', companyNameController),
-            buildTextField('Established In', establishedController),
+            buildEditableDropdownField('Is New', isnew, isnewController),
+            buildTextField('Active', activeController),
+            buildTextField('Requirements', requirementController, maxLines: 4),
             buildTextField('Job Description', jobDescriptionController, maxLines: 4),
+
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: () {},
+              onPressed: uploadJob,
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.blue,
                 shape: RoundedRectangleBorder(

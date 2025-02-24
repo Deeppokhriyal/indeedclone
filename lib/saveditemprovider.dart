@@ -7,10 +7,10 @@ class SavedItemsProvider with ChangeNotifier {
   List<JobData> get savedjobs => _savedjobs;
 
   void savejob(JobData job) {
-    // if (!_savedjobs.contains(job)) {  // Prevent duplicate entries
+    if (!_savedjobs.contains(job)) {  // Prevent duplicate entries
       _savedjobs.add(job);
       notifyListeners();
-    // }
+    }
   }
 
   void removejob(JobData job) {
