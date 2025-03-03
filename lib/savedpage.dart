@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:indeed/homepage.dart';
 import 'package:indeed/saveditemprovider.dart';
 import 'package:provider/provider.dart';
-import 'package:indeed/data/job_data.dart';
 
 class SavedPage extends StatelessWidget {
   @override

@@ -1,4 +1,3 @@
-import 'package:indeed/main.dart';
 import 'package:flutter/material.dart';
 import 'package:indeed/login.dart';
 
