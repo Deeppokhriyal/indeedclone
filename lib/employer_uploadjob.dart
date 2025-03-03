@@ -74,6 +74,8 @@ class _UploadJobScreenState extends State<UploadJobScreen> {
   final List<String> jobPositions = ['Intern', 'Mid Level', 'Senior Level'];
   final List<String> locations = ['California', 'New York', 'Texas', 'Florida'];
   final List<String> isnew = ['True','False'];
+  final List<String> jobtype = ['Full-Time','Part-Time'];
+  final List<String> shiftschedule = ['Morning-Shift','Day-Shift','Night-Shift'];
   final List<String> label =['Hiring multiple candidates','New'];
 
   @override
@@ -99,8 +101,8 @@ class _UploadJobScreenState extends State<UploadJobScreen> {
             buildTextField('Job Title/Designation', jobTitleController),
             buildEditableDropdownField('Job Position', jobPositions, jobPositionController),
             buildTextField('Salary', salaryController),
-            buildTextField('Job Type', jobTypeController),
-            buildTextField('Shift Schedule', shiftScheduleController),
+            buildEditableDropdownField('Job Type', jobtype, jobTypeController),
+            buildEditableDropdownField('Shift Schedule', shiftschedule, shiftScheduleController),
             buildEditableDropdownField('Location', locations, locationController),
             buildEditableDropdownField('Label', label, labelController),
             buildTextField('Company Name', companyNameController),
