@@ -1,9 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
 import 'api_service.dart';
-import 'controllers/auth_comtroller.dart';
-
 
 class MySignUpPage extends StatefulWidget {
   @override

@@ -1,4 +1,6 @@
 import 'dart:convert';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -12,7 +14,7 @@ class ApiService {
       headers: {"Content-Type": "application/json"},
       body: jsonEncode({"name": name, "email": email, "phone": phone, "password": password, "role": role}),
     );
-
+Get.back();
     return response.statusCode == 201 ? jsonDecode(response.body) : null;
   }
 
