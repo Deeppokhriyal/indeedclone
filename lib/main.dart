@@ -1,25 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
+import 'package:indeed/employer_homepage.dart';
 import 'package:indeed/homepage.dart';
 import 'package:indeed/jobs.dart';
 import 'package:indeed/profilescreen.dart';
 import 'package:indeed/saveditemprovider.dart';
 import 'package:indeed/startingpage.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(ChangeNotifierProvider(
-    create: (context) => SavedItemsProvider(),
-    child: MyApp(),
-  ),);
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? role = prefs.getString('role');
+
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => SavedItemsProvider(),
+      child: MyApp(initialRoute: role),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
+  final String? initialRoute;
+
+  MyApp({this.initialRoute});
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: MyStaringPage(),
+      home: initialRoute == 'employer'
+          ? HomeScreen()
+          : initialRoute == 'job_seeker'
+          ? MainScreen()
+          : MyStaringPage(), // Login ya Starting Page
     );
   }
 }

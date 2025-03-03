@@ -8,7 +8,9 @@ class JobDetailPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: Text(job['category']),
         actions: [
           IconButton(
@@ -78,7 +80,7 @@ class JobDetailPage extends StatelessWidget {
               ),
               SizedBox(height: 5),
               Text(
-                job['job_description'],
+                job['job_description']?.toString() ?? "No description available",
                 style: TextStyle(fontSize: 16),
               ),
               SizedBox(height: 10),
@@ -91,18 +93,27 @@ class JobDetailPage extends StatelessWidget {
               ),
               SizedBox(height: 5),
               Text(
-                job['job_requirements'],
+                job['job_requirements']?.toString()?? "No specific requirements mentioned",
                 style: TextStyle(fontSize: 16),
               ),
-              SizedBox(height: 20),
+              SizedBox(height: 50),
               ElevatedButton(
-                onPressed: () {
-                  // Apply Now Functionality
-                },
+                onPressed: () {},
                 style: ElevatedButton.styleFrom(
-                  minimumSize: Size(double.infinity, 50),
+                  backgroundColor: Colors.blue,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
                 ),
-                child: Text("Apply Now"),
+                child: Container(
+                  width: double.infinity,
+                  padding: EdgeInsets.all(15),
+                  alignment: Alignment.center,
+                  child: Text(
+                    'Apply Now',
+                    style: TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ),
               ),
             ],
           ),

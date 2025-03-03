@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:indeed/employer_homepage.dart';
+import 'package:indeed/main.dart';
 import 'package:indeed/signup.dart';
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:google_sign_in/google_sign_in.dart';
 
 import 'package:get/get.dart';
 
-import 'controllers/auth_comtroller.dart';
+import 'api_service.dart';
+
 
 class MyLogin extends StatefulWidget {
 
@@ -14,7 +15,27 @@ class MyLogin extends StatefulWidget {
 }
 
 class _MyLoginState extends State<MyLogin> {
-  final AuthController authController = Get.put(tag:"Login",AuthController());
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  Future<void> _login() async {
+    final response = await ApiService.login(
+        _emailController.text,
+        _passwordController.text
+    );
+
+    if (response != null) {
+      String role = response['user']['role'];
+
+      if (role == 'employer') {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+      } else {
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainScreen()));
+      }
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Login Failed")));
+    }
+  }
 
   // bool _isChecked = false;
 
@@ -48,7 +69,7 @@ class _MyLoginState extends State<MyLogin> {
                           child: Column(
                             children: [
                               TextField( cursorColor: Colors.black,style: TextStyle( fontFamily: 'sans-serif-light'),
-                                controller: authController.usernameController,
+                                controller: _emailController,
                                 decoration: InputDecoration(
                                   fillColor: Colors.pink,
                                   hintText: 'Enter your Email',
@@ -63,7 +84,7 @@ class _MyLoginState extends State<MyLogin> {
                               ),
                               SizedBox(height: 20,),
                               TextField(style: TextStyle( fontFamily: 'sans-serif-light'),
-                                controller: authController.passwordController,
+                                controller: _passwordController,
                                 cursorColor: Colors.black,
                                 obscureText: true,
                                 decoration: InputDecoration(
@@ -81,18 +102,6 @@ class _MyLoginState extends State<MyLogin> {
                               SizedBox(width: 80,),
                               Text('                                            Forget Password?',style: TextStyle(color: Colors.black,fontSize: 12,fontFamily: 'sans-serif-light'),textAlign: TextAlign.right,),
 
-
-                                      Obx(() => CheckboxListTile(
-                                      value: authController.isChecked.value,
-                                      onChanged: (value) {
-                                        authController.isChecked.value = value!;
-                                      },
-                                        activeColor: Colors.green,
-                                      title: Text('As Employer',style: TextStyle(fontFamily: 'sans-serif-thin',fontSize: 13),),
-                                    )),
-
-
-
                               SizedBox(height: 30,),
                               SizedBox(
                                 height: 50,
@@ -101,7 +110,7 @@ class _MyLoginState extends State<MyLogin> {
                                   style: ElevatedButton.styleFrom(
                                     foregroundColor: Colors.blueAccent, backgroundColor: Colors.blueAccent, // Set the text color here
                                   ),
-                                  onPressed: () => authController.login(context),
+                                  onPressed: _login,
                                   // Get.to(()=>MyHomePage());
 
                                   child: Text('Login',style: TextStyle(color: Colors.white, fontSize: 18,fontFamily: 'sans-serif-medium'),),

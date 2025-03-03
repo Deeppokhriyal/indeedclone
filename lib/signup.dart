@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'api_service.dart';
 import 'controllers/auth_comtroller.dart';
 
 
@@ -9,12 +10,30 @@ class MySignUpPage extends StatefulWidget {
   State<MySignUpPage> createState() => _MySignUpPageState();
 }
 class _MySignUpPageState extends State<MySignUpPage> {
-  final AuthController authController = Get.find(tag: "Login");
-  // final SignupController controller=Get.put(tag: 'SignupController',SignupController());
-  // TextEditingController usernameController=TextEditingController();
-  // TextEditingController passwordController=TextEditingController();
-  // bool _isChecked = false;
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _passwordController = TextEditingController();
+  bool _isEmployer = false;
 
+
+  Future<void> _register() async {
+
+    final role = _isEmployer ? "employer" : "job_seeker";
+    final response = await ApiService.register(
+        _nameController.text,
+        _emailController.text,
+        _phoneController.text,
+        _passwordController.text,
+      role
+    );
+
+    if (response != null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Signup Successful")));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Signup Failed")));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +63,7 @@ class _MySignUpPageState extends State<MySignUpPage> {
               Text(''),
               SizedBox(height: 40,),
               TextField(
-                controller: authController.usernameController,
+                controller: _nameController,
                 cursorColor: Colors.black,style: TextStyle( fontFamily: 'sans-serif-light'),
                 decoration: InputDecoration(
                   fillColor: Colors.pink,
@@ -59,9 +78,11 @@ class _MySignUpPageState extends State<MySignUpPage> {
                 ),
               ),
               SizedBox(height: 30,),
-              TextField(style: TextStyle( fontFamily: 'sans-serif-light'),
+              TextField(
+                controller: _emailController,
+                style: TextStyle( fontFamily: 'sans-serif-light'),
                 cursorColor: Colors.black,
-                obscureText: true,
+                obscureText: false,
                 decoration: InputDecoration(
                   fillColor: Colors.grey[100],
                   hintText: 'Enter your Email',
@@ -75,8 +96,26 @@ class _MySignUpPageState extends State<MySignUpPage> {
                 ),
               ),
               SizedBox(height: 30,),
+              TextField(
+                controller: _phoneController,
+                style: TextStyle( fontFamily: 'sans-serif-light'),
+                cursorColor: Colors.black,
+                obscureText: false,
+                decoration: InputDecoration(
+                  fillColor: Colors.grey[100],
+                  hintText: 'Enter your Phone number',
+                  border: OutlineInputBorder( // Unfocused border color
+                      borderRadius: BorderRadius.circular(35)
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(color: Colors.blue),// Focused border color
+                      borderRadius: BorderRadius.circular(35)
+                  ),
+                ),
+              ),
+              SizedBox(height: 30,),
               TextField(style: TextStyle( fontFamily: 'sans-serif-light'),
-                controller: authController.passwordController,
+                controller: _passwordController,
                 obscureText: true,
                 cursorColor: Colors.black,
                 decoration: InputDecoration(
@@ -91,24 +130,24 @@ class _MySignUpPageState extends State<MySignUpPage> {
                   ),
                 ),
               ),
-        
-                Obx(
-                  ()=> CheckboxListTile(
-                      value:authController.isChecked.value,
-                      onChanged: (value) {
-                        authController.isChecked.value = value!;
-                      },
+    CheckboxListTile(
+                      value:_isEmployer,
+      onChanged: (bool? value) {
+        setState(() {
+          _isEmployer = value ?? false;
+        });
+      },
                     activeColor: Colors.green,
                       title: Text('As Employer',style: TextStyle(fontFamily: 'sans-serif-thin',fontSize: 13),),
                     ),
-                ),
+
         
               SizedBox(height: 30,),
               SizedBox(
                 height: 50,
                 width: double.infinity, // Full width
                 child: ElevatedButton(
-                  onPressed: () => authController.signup(context),
+                  onPressed: _register,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.blueAccent, // Set background color to black
                     padding: EdgeInsets.symmetric(vertical: 15), // Button height
