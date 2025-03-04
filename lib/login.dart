@@ -28,9 +28,9 @@ class _MyLoginState extends State<MyLogin> {
       String role = response['user']['role'];
 
       if (role == 'employer') {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+       Get.off(()=> HomeScreen());
       } else {
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainScreen()));
+        Get.off(()=> MainScreen());
       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Login Failed")));

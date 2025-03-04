@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String baseUrl = "http://192.168.0.135:8000/api";
+  static const String baseUrl = "http://192.168.1.91:8000/api";
 
   // Register user
   static Future<Map<String, dynamic>?> register(String name, String email,String phone, String password, String role) async {
@@ -27,11 +27,15 @@ Get.back();
     );
 
     if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      var data = jsonDecode(response.body);
+      String rememberToken = data['remember_token'].toString();
 
       SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('remember_token', rememberToken);
       await prefs.setString('role', data['user']['role']);
-      await prefs.setString('phone', data['user']['phone']); // Phone number store
+      // await prefs.setString('phone', data['user']['phone']);
+      // await prefs.setString('name', data['name']['name']);
+      // await prefs.setString('email', data['email']['email']);
 
       return data;
     }

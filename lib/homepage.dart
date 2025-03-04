@@ -18,7 +18,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Future<List<dynamic>> fetchJobs() async {
-    var url = Uri.parse('http://192.168.0.135:8000/api/jobs');
+    var url = Uri.parse('http://192.168.1.91:8000/api/jobs');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {

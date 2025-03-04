@@ -1,11 +1,58 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'main.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends StatefulWidget {
+  @override
+  State<ProfileScreen> createState() => _ProfileScreenState();
+}
+
+class _ProfileScreenState extends State<ProfileScreen> {
+  Map<String, dynamic>? userData;
+
+
+  @override
+  void initState() {
+    super.initState();
+    fetchUserData();
+  }
+
+
+  Future<void> fetchUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? rememberToken = prefs.getString('remember_token');
+
+    if (rememberToken == null) {
+      print("Remember Token not found");
+      return;
+    }
+
+    var url = Uri.parse("http://192.168.1.91:8000/api/get-user");
+    final response = await http.post(
+      url,
+      headers: {"Accept": "application/json"},
+      body: {"remember_token": rememberToken},
+    );
+
+    if (response.statusCode == 200) {
+      setState(() {
+        userData = jsonDecode(response.body)['user'];
+      });
+    } else {
+      print("Failed to fetch user data");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    // String firstName = userData?['name']?.split(" ")[0] ?? "J";
+    // String lastName = userData?['name']?.split(" ")[1] ?? "D";
+
     return Scaffold(
       backgroundColor: Colors.white,
         appBar: AppBar(
@@ -26,7 +73,9 @@ class ProfileScreen extends StatelessWidget {
     ),
     ],
     ),
-    body: SingleChildScrollView(
+    body:  userData == null
+        ? Center(child: CircularProgressIndicator()) // Loading state
+        : SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -37,7 +86,7 @@ class ProfileScreen extends StatelessWidget {
                 CircleAvatar(
                   radius: 30,
                   child: Text(
-                    "SM",
+                    "${userData!['name'][0]}${userData!['name'].split(" ").length > 1 ? userData!['name'].split(" ")[1][0] : ""}",
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                 ),
@@ -46,50 +95,51 @@ class ProfileScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Shivanshi Mishra",
+                      userData?['name'] ?? "",
                       style: TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold),
+                          fontSize: 30, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 4),
                     Text(
-                      "smishradp2026@gmail.com",
+                      userData?['email'] ?? "",
                       style: TextStyle(color: Colors.grey[600]),
                     ),
                     SizedBox(height: 4),
-                    Text("072489 17717"),
+                    Text(userData?['phone'] ?? ""),
                     SizedBox(height: 4),
-                    Text(
-                      "Dehradun City, Dehradun, Uttarakhand\n248005, IN",
-                      style: TextStyle(color: Colors.grey[600]),
-                    ),
+                    // Text(
+                    //   "Dehradun City, Dehradun, Uttarakhand\n248005, IN",
+                    //   style: TextStyle(color: Colors.grey[600]),
+                    // ),
                   ],
                 ),
               ],
             ),
             SizedBox(height: 20),
-            Divider(),
-            ListTile(
-              title: Text(
-                "Resume",
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              trailing: Icon(Icons.arrow_forward_ios, size: 16),
-              subtitle: Text(
-                "Indeed Resume\nUpdated 28 Jan 2025 - Searchable",
-                style: TextStyle(color: Colors.grey[600]),
-              ),
-              leading: Icon(Icons.insert_drive_file_outlined, size: 32),
-              onTap: () {},
-            ),
+            // Divider(),
+            // ListTile(
+            //   title: Text(
+            //     "Resume",
+            //     style: TextStyle(fontWeight: FontWeight.bold),
+            //   ),
+            //   trailing: Icon(Icons.arrow_forward_ios, size: 16),
+            //   subtitle: Text(
+            //     "Indeed Resume\nUpdated 28 Jan 2025 - Searchable",
+            //     style: TextStyle(color: Colors.grey[600]),
+            //   ),
+            //   leading: Icon(Icons.insert_drive_file_outlined, size: 32),
+            //   onTap: () {},
+            // ),
             Divider(),
             SizedBox(height: 20),
             Text(
               "Improve your job matches",
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                fontSize: 16,
+                fontSize: 20,
               ),
             ),
+            Divider(),
             SizedBox(height: 10),
             buildOption(
               context,
