@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'dart:io';
-import 'package:file_picker/file_picker.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:device_info_plus/device_info_plus.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApplyJobScreen extends StatefulWidget {
@@ -13,6 +15,7 @@ class ApplyJobScreen extends StatefulWidget {
 class _ApplyJobScreenState extends State<ApplyJobScreen> {
   File? _selectedFile;
   String? name, email, phone;
+  final ImagePicker _picker = ImagePicker();
   TextEditingController locationController = TextEditingController();
   TextEditingController experienceController = TextEditingController();
 
@@ -25,7 +28,7 @@ class _ApplyJobScreenState extends State<ApplyJobScreen> {
   Future<void> fetchUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? rememberToken = prefs.getString('remember_token');
-    print("🔹 Saved Token: $rememberToken");// Login ke time saved token
+    print("Saved Token: $rememberToken");// Login ke time saved token
 
     if (rememberToken == null) {
       print("Token not found");
@@ -53,24 +56,85 @@ class _ApplyJobScreenState extends State<ApplyJobScreen> {
     }
   }
 
-  Future<void> _pickFile() async {
-      try {
-        FilePickerResult? result = await FilePicker.platform.pickFiles(
-          type: FileType.custom,
-          allowedExtensions: ['pdf', 'docx'],
-        );
-      if (result != null && result.files.isNotEmpty) {
-        setState(() {
-          _selectedFile = File(result.files.single.path!);
-        });
-        print("✅ File Selected: ${_selectedFile!.path}");
+  // Future<void> _pickFile() async {
+  //     try {
+  //       FilePickerResult? result = await FilePicker.platform.pickFiles(
+  //         type: FileType.custom,
+  //         allowedExtensions: ['pdf', 'docx'],
+  //       );
+  //     if (result != null && result.files.isNotEmpty) {
+  //       setState(() {
+  //         _selectedFile = File(result.files.single.path!);
+  //       });
+  //       print("✅ File Selected: ${_selectedFile!.path}");
+  //     } else {
+  //       print(" No file selected");
+  //     }
+  //   } catch (e) {
+  //     print(" FilePicker Error: $e");
+  //   }
+  // }
+
+
+  static Future<bool> requestPermission() async {
+    DeviceInfoPlugin plugin = DeviceInfoPlugin();
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo android = await plugin.androidInfo;
+      if (android.version.sdkInt < 33) {
+        if (await Permission.storage.request().isGranted) {
+          return true;
+        } else if (await Permission.storage.request().isPermanentlyDenied) {
+          await openAppSettings();
+        } else if (await Permission.audio.request().isDenied) {
+          return false;
+        }
       } else {
-        print(" No file selected");
+        if (await Permission.photos.request().isGranted) {
+          return true;
+        } else if (await Permission.photos.request().isPermanentlyDenied) {
+          await openAppSettings();
+        } else if (await Permission.photos.request().isDenied) {
+          return false;
+        }
       }
-    } catch (e) {
-      print(" FilePicker Error: $e");
+    } else if (Platform.isIOS) {
+      // IosDeviceInfo iosInfo = await plugin.iosInfo;
+      if (await Permission.storage.request().isGranted) {
+        return true;
+      } else if (await Permission.storage.request().isPermanentlyDenied) {
+        await openAppSettings();
+      } else if (await Permission.storage.request().isDenied) {
+        return false;
+      }
+    }
+    return false;
+  }
+  Future picImage() async {
+    // print("fff");
+    bool permission = await requestPermission();
+    if (permission) {
+      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+
+      // if(state is Updated) {
+      //
+      // }
+
+      if (pickedFile != null) {
+        // File? file = await Helper.cropImageFile(pickedFile.path);
+
+      //   Result result = await Repository.instance.uploadFile(file, FileUploadType.PROFILE_IMG);
+      //   if (result.success) {
+      //     user.value.profilePic = result.value;
+      //     user.refresh();
+      //   }
+      // } else {
+      //   Toasty.failed('noImageSelected'.t);
+      // }
     }
   }
+
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -104,7 +168,7 @@ class _ApplyJobScreenState extends State<ApplyJobScreen> {
               _selectedFile != null
                   ? Text("Selected File: ${_selectedFile!.path.split('/').last}")
                   : ElevatedButton.icon(
-                onPressed: _pickFile,
+                onPressed: picImage,
                 icon: Icon(Icons.upload_file),
                 label: Text("Upload CV"),
               ),
