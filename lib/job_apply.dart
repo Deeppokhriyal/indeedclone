@@ -1,8 +1,8 @@
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:device_info_plus/device_info_plus.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -22,30 +22,27 @@ class _ApplyJobScreenState extends State<ApplyJobScreen> {
   @override
   void initState() {
     super.initState();
-    fetchUserData();  // Laravel se user data fetch karenge
+    fetchUserData();
   }
 
   Future<void> fetchUserData() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? rememberToken = prefs.getString('remember_token');
-    print("Saved Token: $rememberToken");// Login ke time saved token
 
     if (rememberToken == null) {
       print("Token not found");
       return;
     }
 
-    var url = Uri.parse("http://192.168.1.91:8000/api/get-user"); // Laravel API
+    var url = Uri.parse("http://192.168.1.91:8000/api/get-user");
     final response = await http.post(
       url,
       headers: {"Accept": "application/json"},
       body: {"remember_token": rememberToken},
     );
-    print("🔹 API Response: ${response.body}");
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
-      print("✅ User Data: $data");
       setState(() {
         name = data['user']['name'];
         email = data['user']['email'];
@@ -55,26 +52,6 @@ class _ApplyJobScreenState extends State<ApplyJobScreen> {
       print("Error fetching user data: ${response.body}");
     }
   }
-
-  // Future<void> _pickFile() async {
-  //     try {
-  //       FilePickerResult? result = await FilePicker.platform.pickFiles(
-  //         type: FileType.custom,
-  //         allowedExtensions: ['pdf', 'docx'],
-  //       );
-  //     if (result != null && result.files.isNotEmpty) {
-  //       setState(() {
-  //         _selectedFile = File(result.files.single.path!);
-  //       });
-  //       print("✅ File Selected: ${_selectedFile!.path}");
-  //     } else {
-  //       print(" No file selected");
-  //     }
-  //   } catch (e) {
-  //     print(" FilePicker Error: $e");
-  //   }
-  // }
-
 
   static Future<bool> requestPermission() async {
     DeviceInfoPlugin plugin = DeviceInfoPlugin();
@@ -109,32 +86,22 @@ class _ApplyJobScreenState extends State<ApplyJobScreen> {
     }
     return false;
   }
-  Future picImage() async {
-    // print("fff");
+
+  Future<void> pickFile() async {
     bool permission = await requestPermission();
-    if (permission) {
-      final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
+    if (!permission) return;
 
-      // if(state is Updated) {
-      //
-      // }
+    final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
-      if (pickedFile != null) {
-        // File? file = await Helper.cropImageFile(pickedFile.path);
-
-      //   Result result = await Repository.instance.uploadFile(file, FileUploadType.PROFILE_IMG);
-      //   if (result.success) {
-      //     user.value.profilePic = result.value;
-      //     user.refresh();
-      //   }
-      // } else {
-      //   Toasty.failed('noImageSelected'.t);
-      // }
+    if (pickedFile != null) {
+      setState(() {
+        _selectedFile = File(pickedFile.path);
+      });
+      print("File Selected: ${_selectedFile!.path}");
+    } else {
+      print("No file selected");
     }
   }
-
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -165,13 +132,35 @@ class _ApplyJobScreenState extends State<ApplyJobScreen> {
               SizedBox(height: 20),
               Text("Upload Your CV", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               SizedBox(height: 10),
+
               _selectedFile != null
-                  ? Text("Selected File: ${_selectedFile!.path.split('/').last}")
+                  ? Row(
+                children: [
+                  Icon(Icons.file_present, color: Colors.green),
+                  SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      _selectedFile!.path.split('/').last,
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.close, color: Colors.red),
+                    onPressed: () {
+                      setState(() {
+                        _selectedFile = null;
+                      });
+                    },
+                  ),
+                ],
+              )
                   : ElevatedButton.icon(
-                onPressed: picImage,
+                onPressed: pickFile,
                 icon: Icon(Icons.upload_file),
                 label: Text("Upload CV"),
               ),
+
               SizedBox(height: 20),
               Text("Location", style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               TextField(
