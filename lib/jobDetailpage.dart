@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'job_apply.dart';
+
 class JobDetailPage extends StatelessWidget {
   final Map<String, dynamic> job;
 
@@ -98,7 +100,9 @@ class JobDetailPage extends StatelessWidget {
               ),
               SizedBox(height: 50),
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ApplyJobScreen()));
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                   shape: RoundedRectangleBorder(

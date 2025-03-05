@@ -38,6 +38,7 @@ dependencies:
   get:
   shared_preferences: ^2.5.1
   provider: ^6.1.2
+  file_picker: ^9.0.2
 
 
 
