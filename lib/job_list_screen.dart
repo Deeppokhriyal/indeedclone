@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:indeed/Job_Applied.dart';
 import 'package:indeed/Job_Posted.dart';
 
 class JobListScreen extends StatelessWidget {
@@ -40,7 +41,7 @@ class JobListScreen extends StatelessWidget {
       body: TabBarView(
     children: [
     JobPosted(), // Placeholder
-    Center(child: Text('Jobs Applied Page')), // Placeholder
+    EmployerDashboard(), // Placeholder
     ],
     ),
     ),
