@@ -32,7 +32,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return;
     }
 
-    var url = Uri.parse("http://192.168.1.91:8000/api/get-user");
+    var url = Uri.parse("192.168.1.91:8000/api/get-user");
     final response = await http.post(
       url,
       headers: {"Accept": "application/json"},

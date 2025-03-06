@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
-import 'package:indeed/homepage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -15,6 +14,7 @@ class ApplyJobScreen extends StatefulWidget {
 
 class _ApplyJobScreenState extends State<ApplyJobScreen> {
   File? _selectedFile;
+  var cvImage;
   String? name, email, phone;
   final ImagePicker _picker = ImagePicker();
   TextEditingController locationController = TextEditingController();
@@ -35,7 +35,7 @@ class _ApplyJobScreenState extends State<ApplyJobScreen> {
       return;
     }
 
-    var url = Uri.parse("http://192.168.1.91:8000/api/get-user");
+    var url = Uri.parse("http://192.168.1.9:8000/api/get-user");
     final response = await http.post(
       url,
       headers: {"Accept": "application/json"},
@@ -76,12 +76,66 @@ class _ApplyJobScreenState extends State<ApplyJobScreen> {
     bool permission = await requestPermission();
     if (!permission) return;
 
+
+
     final pickedFile = await _picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
         setState(() {
           _selectedFile = File(pickedFile.path);
         });
+
+        try {
+          var url = Uri.parse("http://192.168.1.91:8000/api/uploadFile");
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          String? rememberToken = prefs.getString('remember_token');
+
+          var request = http.MultipartRequest("POST", url);
+          request.headers['Authorization'] = "Bearer $rememberToken";
+
+          // request.fields['name'] = name!;
+          // request.fields['email'] = email!;
+          // request.fields['phone'] = phone!;
+          // request.fields['location'] = locationController.text;
+          // request.fields['experience'] = experienceController.text;
+
+          if (_selectedFile != null) {
+            request.files.add(
+                await http.MultipartFile.fromPath('cv', _selectedFile!.path));
+          }
+
+          var response = await request.send();
+
+          var responseBody = await response.stream.bytesToString();
+          print(" API Response: ${response.statusCode}");
+          print(" Response Body: $responseBody");
+
+          if (response.statusCode == 200) {
+            var data=jsonDecode(responseBody);
+            print(data['value']);
+            cvImage = data['value'].split('/').last;
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Application submitted successfully")));
+
+            // setState(() {
+            //   locationController.clear();
+            //   experienceController.clear();
+            //   _selectedFile = null;
+            // });
+
+            // Navigator.pushReplacement(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => MyHomePage()),
+            // ); // Home page pr wapas jaane ke liye
+          } else {
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("Failed to submit application")));
+          }
+        } catch (e) {
+          print("Error: $e");
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Something went wrong! Try again.")));
+        }
     }
   }
 
@@ -110,11 +164,12 @@ class _ApplyJobScreenState extends State<ApplyJobScreen> {
       request.fields['phone'] = phone!;
       request.fields['location'] = locationController.text;
       request.fields['experience'] = experienceController.text;
+      request.fields['cv'] = cvImage;
 
-      if (_selectedFile != null) {
-        request.files.add(
-            await http.MultipartFile.fromPath('cv', _selectedFile!.path));
-      }
+      // if (_selectedFile != null) {
+      //   request.files.add(
+      //       await http.MultipartFile.fromPath('cv', _selectedFile!.path));
+      // }
 
       var response = await request.send();
 
@@ -132,10 +187,10 @@ class _ApplyJobScreenState extends State<ApplyJobScreen> {
         //   _selectedFile = null;
         // });
 
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => MyHomePage()),
-        ); // Home page pr wapas jaane ke liye
+        // Navigator.pushReplacement(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => MyHomePage()),
+        // ); // Home page pr wapas jaane ke liye
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Failed to submit application")));

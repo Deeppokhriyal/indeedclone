@@ -85,13 +85,28 @@ class _UploadJobScreenState extends State<UploadJobScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         elevation: 0,
-        leading: IconButton(onPressed:(){}, icon:Icon(Icons.arrow_back)),
+        leading: IconButton(
+          onPressed: () {},
+          icon: Icon(Icons.arrow_back),
+        ),
         centerTitle: true,
         title: Text(
           'Upload Job',
           style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
         ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) => JobListScreen()));
+            },
+            child: Text(
+              "Skip",
+              style: TextStyle(color: Colors.blue, fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
       ),
+
       body: SingleChildScrollView(
         padding: EdgeInsets.all(20),
         child: Column(

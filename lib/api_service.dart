@@ -33,9 +33,6 @@ Get.back();
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('remember_token', rememberToken);
       await prefs.setString('role', data['user']['role']);
-      // await prefs.setString('phone', data['user']['phone']);
-      // await prefs.setString('name', data['name']['name']);
-      // await prefs.setString('email', data['email']['email']);
 
       return data;
     }

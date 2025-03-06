@@ -23,6 +23,11 @@ class _MyLoginState extends State<MyLogin> {
         _emailController.text,
         _passwordController.text
     );
+    print("API Response: $response");
+
+    if (response != null && response['user'] != null) {
+      String role = response['user']['role'];
+      print(" Login Successful: User role - $role");
 
     if (response != null) {
       String role = response['user']['role'];
@@ -33,6 +38,8 @@ class _MyLoginState extends State<MyLogin> {
         Get.off(()=> MainScreen());
       }
     } else {
+      print(" Login Failed: Invalid response");
+    }
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Login Failed")));
     }
   }

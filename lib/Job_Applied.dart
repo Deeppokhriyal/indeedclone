@@ -42,7 +42,7 @@ class _EmployerDashboardState extends State<EmployerDashboard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Job Applications")),
+      backgroundColor: Colors.white,
       body: applications.isEmpty
           ? Center(child: CircularProgressIndicator())
           : ListView.builder(
@@ -52,7 +52,15 @@ class _EmployerDashboardState extends State<EmployerDashboard> {
           return Card(
             margin: EdgeInsets.all(10),
             child: ListTile(
-              title: Text(app['name']),
+              title:  Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(app['name'], style: TextStyle(fontWeight: FontWeight.bold)),
+                  Text(app['email'], style: TextStyle(color: Colors.grey[700])),
+                  Text(app['phone'], style: TextStyle(color: Colors.grey[700])),
+                  Text("Location: ${app['location']}"),
+                ],
+              ),
               subtitle: Text("Experience: ${app['experience']} years"),
               trailing: ElevatedButton(
                 onPressed: () => openCV(app['cv_url']),
