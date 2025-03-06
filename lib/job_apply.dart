@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:image_picker/image_picker.dart';
+import 'package:indeed/main.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -35,7 +36,7 @@ class _ApplyJobScreenState extends State<ApplyJobScreen> {
       return;
     }
 
-    var url = Uri.parse("http://192.168.1.9:8000/api/get-user");
+    var url = Uri.parse("http://192.168.1.91:8000/api/get-user");
     final response = await http.post(
       url,
       headers: {"Accept": "application/json"},
@@ -115,7 +116,7 @@ class _ApplyJobScreenState extends State<ApplyJobScreen> {
             print(data['value']);
             cvImage = data['value'].split('/').last;
             ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Application submitted successfully")));
+                SnackBar(content: Text("CV upload successfully")));
 
             // setState(() {
             //   locationController.clear();
@@ -125,11 +126,11 @@ class _ApplyJobScreenState extends State<ApplyJobScreen> {
 
             // Navigator.pushReplacement(
             //   context,
-            //   MaterialPageRoute(builder: (context) => MyHomePage()),
+            //   MaterialPageRoute(builder: (context) => MainScreen()),
             // ); // Home page pr wapas jaane ke liye
           } else {
             ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text("Failed to submit application")));
+                SnackBar(content: Text("Failed to submit CV")));
           }
         } catch (e) {
           print("Error: $e");
@@ -187,10 +188,10 @@ class _ApplyJobScreenState extends State<ApplyJobScreen> {
         //   _selectedFile = null;
         // });
 
-        // Navigator.pushReplacement(
-        //   context,
-        //   MaterialPageRoute(builder: (context) => MyHomePage()),
-        // ); // Home page pr wapas jaane ke liye
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => MainScreen()),
+        ); // Home page pr wapas jaane ke liye
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("Failed to submit application")));

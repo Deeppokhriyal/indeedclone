@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:url_launcher/url_launcher.dart';
+
+import 'Helper.dart';
 
 class EmployerDashboard extends StatefulWidget {
   @override
@@ -31,12 +32,18 @@ class _EmployerDashboardState extends State<EmployerDashboard> {
   }
 
   Future<void> openCV(String cvUrl) async {
-    final Uri url = Uri.parse(cvUrl);
-    if (await canLaunchUrl(url)) {
-      await launchUrl(url, mode: LaunchMode.externalApplication);
-    } else {
-      print("Could not open CV file");
+    if (!cvUrl.contains("http://192.168.1.91:8000/storage/uploads/cvs/")) {
+      cvUrl = "http://192.168.1.91:8000/storage/uploads/cvs/" + cvUrl.split('/').last;
     }
+
+
+    Helper.openUrl(cvUrl);
+    // final Uri url = Uri.parse(cvUrl);
+    // if (await canLaunchUrl(url)) {
+    //   await launchUrl(url, mode: LaunchMode.externalNonBrowserApplication);
+    // } else {
+    //   print("Could not open CV file: $cvUrl");
+    // }
   }
 
   @override

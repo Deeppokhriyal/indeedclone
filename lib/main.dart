@@ -9,33 +9,58 @@ import 'package:indeed/startingpage.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() async {
+void main() {
   WidgetsFlutterBinding.ensureInitialized();
-  SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? role = prefs.getString('role');
-
   runApp(
     ChangeNotifierProvider(
       create: (context) => SavedItemsProvider(),
-      child: MyApp(initialRoute: role),
+      child: MyApp(),
     ),
   );
 }
 
-class MyApp extends StatelessWidget {
-  final String? initialRoute;
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
 
-  MyApp({this.initialRoute});
+class _MyAppState extends State<MyApp> {
+  String? role;
+  bool isLoading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    getUserRole();
+  }
+
+  Future<void> getUserRole() async {
+    try {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await Future.delayed(Duration(milliseconds: 500)); // Prevent blocking UI
+      setState(() {
+        role = prefs.getString('role');
+        isLoading = false;
+      });
+    } catch (e) {
+      debugPrint("Error loading role: $e");
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      home: initialRoute == 'employer'
+      home: isLoading
+          ? Center(child: CircularProgressIndicator()) // Prevent black screen
+          : role == 'employer'
           ? HomeScreen()
-          : initialRoute == 'job_seeker'
+          : role == 'job_seeker'
           ? MainScreen()
-          : MyStaringPage(), // Login ya Starting Page
+          : MyStaringPage(),
     );
   }
 }
@@ -46,7 +71,7 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
-  int _selectedIndex = 0;
+  final ValueNotifier<int> _selectedIndex = ValueNotifier<int>(0);
 
   final List<Widget> _pages = [
     MyHomePage(),
@@ -55,74 +80,54 @@ class _MainScreenState extends State<MainScreen> {
     ProfileScreen(),
   ];
 
-  void _onItemTapped(int index) {
-    setState(() {
-      _selectedIndex = index;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop:()async{
-        if(_selectedIndex==0){
-          return true;
-        }
-        else{
-          setState(() {
-            _selectedIndex = 0;
-          });
-          return false;
-        }
-
-      }
-     ,
-
-      child: Scaffold(
-        // appBar: AppBar(
-        //   title: Text(
-        //     _selectedIndex == 0
-        //         ? 'Home'
-        //         : _selectedIndex == 1
-        //         ? 'My Jobs'
-        //         : _selectedIndex == 2
-        //         ? 'Messages'
-        //         : 'Profile',
-        //   ),
-        //   backgroundColor: Colors.blueAccent,
-        // ),
-        body: IndexedStack(
-          index: _selectedIndex,
-          children: _pages,
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: Colors.white,
-          type: BottomNavigationBarType.fixed,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.home),
-              label: 'Home',
+    return ValueListenableBuilder<int>(
+      valueListenable: _selectedIndex,
+      builder: (context, index, child) {
+        return WillPopScope(
+          onWillPop: () async {
+            if (index == 0) {
+              return true;
+            } else {
+              _selectedIndex.value = 0;
+              return false;
+            }
+          },
+          child: Scaffold(
+            body: IndexedStack(
+              index: index,
+              children: _pages,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.work),
-              label: 'My Jobs',
+            bottomNavigationBar: BottomNavigationBar(
+              backgroundColor: Colors.white,
+              type: BottomNavigationBarType.fixed,
+              items: const <BottomNavigationBarItem>[
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.home),
+                  label: 'Home',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.work),
+                  label: 'My Jobs',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.message),
+                  label: 'Messages',
+                ),
+                BottomNavigationBarItem(
+                  icon: Icon(Icons.person),
+                  label: 'Profile',
+                ),
+              ],
+              currentIndex: index,
+              selectedItemColor: Colors.blueAccent,
+              unselectedItemColor: Colors.grey,
+              onTap: (i) => _selectedIndex.value = i,
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.message),
-              label: 'Messages',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Profile',
-            ),
-          ],
-          currentIndex: _selectedIndex,
-          selectedItemColor: Colors.blueAccent,
-          unselectedItemColor: Colors.grey,
-          onTap: _onItemTapped,
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 }
-

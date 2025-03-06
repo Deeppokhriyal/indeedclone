@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:indeed/employer_uploadjob.dart';
+import 'package:indeed/startingpage.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomeScreen extends StatelessWidget {
   @override
@@ -21,6 +23,15 @@ class UploadJobScreen extends StatelessWidget {
     {'icon': Icons.code, 'label': 'Programmer'},
   ];
 
+  void logout(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear(); // Role remove karo
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => MyStaringPage()), // Login page par redirect
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,6 +44,15 @@ class UploadJobScreen extends StatelessWidget {
           'Upload Job',
           style: TextStyle(color: Colors.black, fontSize: 20, fontWeight: FontWeight.bold),
         ),
+
+        actions: [
+          IconButton(
+            icon: Icon(Icons.notifications),
+            onPressed: () {
+              logout(context);
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [

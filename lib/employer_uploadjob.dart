@@ -3,22 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:indeed/job_list_screen.dart';
 
-class UploadJob extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: UploadJobScreen(),
-    );
-  }
-}
+import 'employer_homepage.dart';
 
-class UploadJobScreen extends StatefulWidget {
+class UploadJob extends StatefulWidget {
   @override
   _UploadJobScreenState createState() => _UploadJobScreenState();
 }
 
-class _UploadJobScreenState extends State<UploadJobScreen> {
+class _UploadJobScreenState extends State<UploadJob> {
   TextEditingController categoryController = TextEditingController();
   TextEditingController jobPositionController = TextEditingController();
   TextEditingController locationController = TextEditingController();
@@ -86,7 +78,9 @@ class _UploadJobScreenState extends State<UploadJobScreen> {
         backgroundColor: Colors.white,
         elevation: 0,
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (context)=>HomeScreen()));
+          },
           icon: Icon(Icons.arrow_back),
         ),
         centerTitle: true,
