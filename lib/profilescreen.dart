@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:indeed/startingpage.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'main.dart';
@@ -32,7 +33,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return;
     }
 
-    var url = Uri.parse("192.168.1.91:8000/api/get-user");
+    var url = Uri.parse("192.168.1.63:8000/api/get-user");
     final response = await http.post(
       url,
       headers: {"Accept": "application/json"},
@@ -46,6 +47,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     } else {
       print("Failed to fetch user data");
     }
+  }
+
+  void logout(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.clear(); // Role remove karo
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => MyStaringPage()), // Login page par redirect
+    );
   }
 
   @override
@@ -68,8 +78,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     elevation: 0,
     actions: [
     IconButton(
-    icon: Icon(Icons.menu),
-    onPressed: () {},
+    icon: Icon(Icons.logout),
+    onPressed: () {
+      logout(context);
+    },
     ),
     ],
     ),

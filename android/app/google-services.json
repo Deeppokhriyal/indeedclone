@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "962094842908",
+    "project_id": "indeedclone-70149",
+    "storage_bucket": "indeedclone-70149.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:962094842908:android:79a66c4217a598cbcecbd9",
+        "android_client_info": {
+          "package_name": "com.example.indeed"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA1SjjnTlMgam37xZIJ_RL6xW2O1ZJ7pGI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

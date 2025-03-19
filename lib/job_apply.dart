@@ -9,6 +9,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApplyJobScreen extends StatefulWidget {
+  String jobId;
+  ApplyJobScreen({required this.jobId});
   @override
   _ApplyJobScreenState createState() => _ApplyJobScreenState();
 }
@@ -16,7 +18,7 @@ class ApplyJobScreen extends StatefulWidget {
 class _ApplyJobScreenState extends State<ApplyJobScreen> {
   File? _selectedFile;
   var cvImage;
-  String? name, email, phone;
+  String? job_title, name, email, phone;
   final ImagePicker _picker = ImagePicker();
   TextEditingController locationController = TextEditingController();
   TextEditingController experienceController = TextEditingController();
@@ -36,11 +38,11 @@ class _ApplyJobScreenState extends State<ApplyJobScreen> {
       return;
     }
 
-    var url = Uri.parse("http://192.168.1.91:8000/api/get-user");
+    var url = Uri.parse("http://192.168.1.63:8000/api/get-user");
     final response = await http.post(
       url,
       headers: {"Accept": "application/json"},
-      body: {"remember_token": rememberToken},
+      body: {"remember_token": rememberToken,'job_id':widget.jobId},
     );
 
     if (response.statusCode == 200) {
@@ -49,11 +51,30 @@ class _ApplyJobScreenState extends State<ApplyJobScreen> {
           name = data['user']['name'];
           email = data['user']['email'];
           phone = data['user']['phone'];
+          job_title = data['user']['job_application'];
+
         });
     } else {
       print("Error fetching user data: ${response.body}");
     }
   }
+
+  // Future<void> fetchJobTitle() async {
+  //   var url = Uri.parse("http://192.168.1.91:8000/api/job/{id}");
+  //   final response = await http.get(url);
+  //
+  //   if (response.statusCode == 200) {
+  //     var data = jsonDecode(response.body);
+  //     print("Job Data: $data"); // Debugging ke liye API response print karein
+  //
+  //     setState(() {
+  //       job_title = data['job']['job_title'] ?? "Unknown Job"; // Job title ko set karein
+  //     });
+  //   } else {
+  //     print("Error fetching job title: ${response.body}");
+  //   }
+  // }
+
 
   Future<bool> requestPermission() async {
     DeviceInfoPlugin plugin = DeviceInfoPlugin();
@@ -87,7 +108,7 @@ class _ApplyJobScreenState extends State<ApplyJobScreen> {
         });
 
         try {
-          var url = Uri.parse("http://192.168.1.91:8000/api/uploadFile");
+          var url = Uri.parse("http://192.168.1.63:8000/api/uploadFile");
           SharedPreferences prefs = await SharedPreferences.getInstance();
           String? rememberToken = prefs.getString('remember_token');
 
@@ -141,7 +162,8 @@ class _ApplyJobScreenState extends State<ApplyJobScreen> {
   }
 
   Future<void> submitApplication(BuildContext context) async {
-    if (name == null ||
+    if (job_title == null ||
+    name == null ||
         email == null ||
         phone == null ||
         locationController.text.isEmpty ||
@@ -160,6 +182,7 @@ class _ApplyJobScreenState extends State<ApplyJobScreen> {
       var request = http.MultipartRequest("POST", url);
       request.headers['Authorization'] = "Bearer $rememberToken";
 
+      request.fields['job_title'] = job_title!;
       request.fields['name'] = name!;
       request.fields['email'] = email!;
       request.fields['phone'] = phone!;
@@ -225,7 +248,7 @@ class _ApplyJobScreenState extends State<ApplyJobScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Personal Details",
+              Text(job_title ?? "",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
               SizedBox(height: 10),
               Text(name ?? ""),
@@ -292,7 +315,7 @@ class _ApplyJobScreenState extends State<ApplyJobScreen> {
                   width: double.infinity,
                   padding: EdgeInsets.all(15),
                   alignment: Alignment.center,
-                  child: Text("Continue",
+                  child: Text("Submit",
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,

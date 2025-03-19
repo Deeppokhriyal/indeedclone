@@ -22,6 +22,12 @@ class JobListScreen extends StatelessWidget {
         fontWeight: FontWeight.bold,
     ),
     ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.notifications),
+            onPressed: () {},
+          ),
+        ],
     elevation: 1, // Light shadow for a clean look
     bottom: PreferredSize(
     preferredSize: Size.fromHeight(50),

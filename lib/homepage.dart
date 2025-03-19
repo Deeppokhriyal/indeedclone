@@ -2,11 +2,9 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:indeed/notification_services.dart';
 import 'package:indeed/saveditemprovider.dart';
-import 'package:indeed/startingpage.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import 'data/job_data.dart';
 import 'jobDetailpage.dart';
 
@@ -18,7 +16,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   Future<List<dynamic>> fetchJobs() async {
-    var url = Uri.parse('http://192.168.1.91:8000/api/jobs');
+    var url = Uri.parse('http://192.168.1.63:8000/api/jobs');
     final response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -29,14 +27,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  void logout(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.clear(); // Role remove karo
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (context) => MyStaringPage()), // Login page par redirect
-    );
-  }
   // int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
@@ -53,8 +43,11 @@ class _MyHomePageState extends State<MyHomePage> {
           IconButton(
             icon: Icon(Icons.notifications),
             onPressed: () {
-              logout(context);
-            },
+            //   Navigator.push(
+            //   context,
+            //   MaterialPageRoute(builder: (context) => NotificationServices()),
+            // );
+              },
           ),
         ],
       ),

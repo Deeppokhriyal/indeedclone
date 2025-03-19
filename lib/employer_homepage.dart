@@ -47,7 +47,7 @@ class UploadJobScreen extends StatelessWidget {
 
         actions: [
           IconButton(
-            icon: Icon(Icons.notifications),
+            icon: Icon(Icons.logout),
             onPressed: () {
               logout(context);
             },

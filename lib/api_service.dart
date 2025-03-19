@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String baseUrl = "http://192.168.1.91:8000/api";
+  static const String baseUrl = "http://192.168.1.63:8000/api";
 
   // Register user
   static Future<Map<String, dynamic>?> register(String name, String email,String phone, String password, String role) async {

@@ -101,7 +101,7 @@ class JobDetailPage extends StatelessWidget {
               SizedBox(height: 50),
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => ApplyJobScreen()));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ApplyJobScreen(jobId: job['id'].toString(),)));
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
