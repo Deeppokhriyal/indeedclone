@@ -4,6 +4,8 @@ import 'package:get/get_navigation/src/extension_navigation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'notification_services.dart';
+
 class ApiService {
   static const String baseUrl = "http://192.168.1.63:8000/api";
 
@@ -28,14 +30,25 @@ Get.back();
 
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
+      String Id = data['user']['id'].toString(); // User ID from API
+      // String? token = await FirebaseMessaging.instance.getToken();
       String rememberToken = data['remember_token'].toString();
-
+      // String Id = data['id'].toString();
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setString('remember_token', rememberToken);
       await prefs.setString('role', data['user']['role']);
+      await prefs.setString('id', Id);
+      NotificationServices();
+      // await http.post(
+      //   Uri.parse("http://192.168.1.63:8000/api/get-device-token"),
+      //   headers: {"Accept": "application/json"},
+      //   body: {"id": Id, "fcm_token": token},
+      // );
 
+      print("✅ FCM Token Stored for User: $Id");
       return data;
     }
+    // else{print("❌ Login Failed");}
     return null;
   }
 }

@@ -4,6 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'dart:math';
 
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
+
 class NotificationServices{
   NotificationServices(){
     getDeviceToken();
@@ -127,20 +130,68 @@ class NotificationServices{
 
 
 
-  Future<String> getDeviceToken() async {
+  Future<void> getDeviceToken() async {
     // print)()
-    try {
-      String? token = await firebaseMessaging.getToken();
-      print("FCM TOKEN: ${token}");
+    // try {
+    //   String? token = await firebaseMessaging.getToken();
+    //   print("FCM TOKEN: ${token}");
+    //
+    //   if (token == null) return;
+    //
+    //   // Get User ID from Laravel API
+    //   var userUrl = Uri.parse("http://192.168.1.63:8000/api/login");
+    //   var userResponse = await http.post(userUrl, headers: {
+    //     "Authorization": "Bearer YOUR_ACCESS_TOKEN",
+    //     "Accept": "application/json",
+    //   });
+    //
+    //   if (userResponse.statusCode != 200) {
+    //     print(" Failed to fetch user data: ${userResponse.body}");
+    //     return;
+    //   }
+    //
+    //   var userData = jsonDecode(userResponse.body);
+    //   String id = userData['id'].toString();
+    //
+    //   // Send FCM Token to Laravel API
+    //   var fcmUrl = Uri.parse("http://192.168.1.63:8000/api/get-device-token");
+    //   var response = await http.post(
+    //     fcmUrl,
+    //     headers: {"Content-Type": "application/json"},
+    //     body: jsonEncode({
+    //       "id": id.toString(),
+    //       "fcm_token": token,
+    //     }),
+    //   );
+    //
+    //   print(" API Response: ${response.body}");
+    //
+    //   if (response.statusCode == 200) {
+    //     print(" FCM Token updated successfully");
+    //   } else {
+    //     print(" Failed to update FCM Token: ${response.body}");
+    //   }
+    // } catch (e) {
+    //   print("Error updating FCM Token: $e");
+    // }
+    String? token = await FirebaseMessaging.instance.getToken();
+    print("FCM Token: $token");
 
-      return token??"";
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? Id = prefs.getString('id');
+
+
+    if (Id == null) {
+      print("❌ User ID Not Found");
+      return;
     }
-    catch(e){
-      print(e.toString());
-      print("fcm exception");
-      //  Logger.ex(tag: "DEVICE TOKEN: ",value:e.toString());
-    }
-    return '';
+
+    var url = Uri.parse("http://192.168.1.63:8000/api/get-device-token");
+    await http.post(
+      url,
+      headers: {"Accept": "application/json"},
+      body: {"id": Id, "fcm_token": token},
+    );
   }
 
 

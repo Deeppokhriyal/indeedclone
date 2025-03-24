@@ -46,7 +46,7 @@ class _UploadJobScreenState extends State<UploadJob> {
     print(jobData);
 
       final response = await http.post(
-      Uri.parse('http:192.168.1.63:8000/api/upload-job'),
+      Uri.parse('http://192.168.1.63:8000/api/upload-job'),
       headers: {'Content-Type': 'application/json'},
       body: jsonEncode(jobData),
     );

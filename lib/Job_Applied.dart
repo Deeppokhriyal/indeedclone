@@ -37,15 +37,45 @@ class _EmployerDashboardState extends State<EmployerDashboard> {
     Helper.openUrl(cvUrl);
   }
 
-  Future<void> handleApplication(int index, String status) async {
-    var app = applications[index];
-    var url = Uri.parse("http://192.168.1.63:8000/api/update-application");
+  Future<void> sendMessage(int jobSeekerId, int jobId, String status) async {
+    var url = Uri.parse("http://192.168.1.63:8000/api/store-message");
 
     final response = await http.post(
       url,
       headers: {"Accept": "application/json"},
       body: {
-        "application_id": app['id'].toString(),
+        "job_seeker_id": jobSeekerId.toString(),
+        "job_id": jobId.toString(),
+        "status": status,
+        "message": status == "accepted"
+            ? "Your job application has been accepted."
+            : "Sorry! Your job application has been denied.",
+      },
+    );
+
+    if (response.statusCode == 200) {
+      print("Message stored successfully");
+    } else {
+      print("Error storing message: ${response.body}");
+    }
+  }
+
+
+  Future<void> handleApplication(int index, String status) async {
+    var app = applications[index];
+    if (app['id'] == null) {  // Check if ID is null
+      print("Error: Application ID is null");
+      return;
+    }
+    var url = Uri.parse("http://192.168.1.63:8000/api/update-application");
+print(app['id'].toString());
+    ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(app['id'].toString())));
+    final response = await http.post(
+      url,
+      headers: {"Accept": "application/json"},
+      body: {
+        "id": app['id'].toString(),
         "status": status,
       },
     );
@@ -57,12 +87,16 @@ class _EmployerDashboardState extends State<EmployerDashboard> {
         });
       }
 
-      // Send notification to job seeker
+      // Send Message to Job Seeker
+      await sendMessage(app['job_seeker_id'], app['job_id'], status);
+
+      // Send FCM Notification to Job Seeker
       await sendNotification(app['id'], status);
     } else {
       print("Error updating application: ${response.body}");
     }
   }
+
 
   Future<void> sendNotification(int id, String status) async {
     var url = Uri.parse("http://192.168.1.63:8000/api/send-notification");

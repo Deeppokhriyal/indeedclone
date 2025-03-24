@@ -95,7 +95,7 @@ class JobDetailPage extends StatelessWidget {
               ),
               SizedBox(height: 5),
               Text(
-                job['job_requirements']?.toString()?? "No specific requirements mentioned",
+                job['requirements']?.toString()?? "No specific requirements mentioned",
                 style: TextStyle(fontSize: 16),
               ),
               SizedBox(height: 50),

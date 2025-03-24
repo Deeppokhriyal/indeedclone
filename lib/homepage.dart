@@ -2,7 +2,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
-import 'package:indeed/notification_services.dart';
 import 'package:indeed/saveditemprovider.dart';
 import 'package:provider/provider.dart';
 import 'data/job_data.dart';

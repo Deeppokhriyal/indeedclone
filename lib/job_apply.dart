@@ -18,7 +18,7 @@ class ApplyJobScreen extends StatefulWidget {
 class _ApplyJobScreenState extends State<ApplyJobScreen> {
   File? _selectedFile;
   var cvImage;
-  String? job_title, name, email, phone;
+  String? job_title, uid,name, email, phone;
   final ImagePicker _picker = ImagePicker();
   TextEditingController locationController = TextEditingController();
   TextEditingController experienceController = TextEditingController();
@@ -48,12 +48,16 @@ class _ApplyJobScreenState extends State<ApplyJobScreen> {
     if (response.statusCode == 200) {
       var data = jsonDecode(response.body);
         setState(() {
+          uid = data['user']['id'].toString();
           name = data['user']['name'];
           email = data['user']['email'];
           phone = data['user']['phone'];
           job_title = data['user']['job_application'];
 
         });
+      // ScaffoldMessenger.of(context).showSnackBar(
+      //     SnackBar(content: Text(uid??"")));
+
     } else {
       print("Error fetching user data: ${response.body}");
     }
@@ -162,8 +166,12 @@ class _ApplyJobScreenState extends State<ApplyJobScreen> {
   }
 
   Future<void> submitApplication(BuildContext context) async {
+    // ScaffoldMessenger.of(context).showSnackBar(
+    //     SnackBar(content: Text(uid??"")));
+    // return;
     if (job_title == null ||
     name == null ||
+        uid == null ||
         email == null ||
         phone == null ||
         locationController.text.isEmpty ||
@@ -175,7 +183,7 @@ class _ApplyJobScreenState extends State<ApplyJobScreen> {
     }
 
     try {
-      var url = Uri.parse("http://192.168.1.91:8000/api/apply-job");
+      var url = Uri.parse("http://192.168.1.63:8000/api/apply-job");
       SharedPreferences prefs = await SharedPreferences.getInstance();
       String? rememberToken = prefs.getString('remember_token');
 
@@ -184,6 +192,7 @@ class _ApplyJobScreenState extends State<ApplyJobScreen> {
 
       request.fields['job_title'] = job_title!;
       request.fields['name'] = name!;
+      request.fields['uid'] = uid!;
       request.fields['email'] = email!;
       request.fields['phone'] = phone!;
       request.fields['location'] = locationController.text;
